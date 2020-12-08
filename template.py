@@ -24,9 +24,9 @@ def test(test_input, expected):
         assert is_valid == expected_valid
 
 
-test(parse_file("06-01-test-input.txt"), 
+test(parse_file("06-01-test-input.txt"),
      [False, False, False, False, True, True, True, True])
 
 
 seats = main(parse_file("06-01-input.txt"))
-print("solution:", main(seats))
+print("solution:", seats)
