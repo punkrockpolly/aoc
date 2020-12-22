@@ -17,10 +17,12 @@ Action R means to rotate the waypoint around the ship right (clockwise) the give
 Action F means to move forward to the waypoint a number of times equal to the given value.
 
 The waypoint starts 10 units east and 1 unit north relative to the ship.
+Forward moves the ship to the waypoint 10 times the value.
 
-Goal: At the end of these instructions, the ship's Manhattan distance
-(sum of the absolute values of its east/west position and its north/south position)
-from its starting position is 17 + 8 = 25.
+Goal: Find Manhattan distance from ships starting position.
+
+solution: 562 too low
+
 """
 
 
@@ -31,15 +33,7 @@ def parse_file(input):
 
 
 class Ferry():
-    def __init__(self, starting_degrees):
-        self.degrees_to_direction = {
-            0: 'north',
-            90: 'east',
-            180: 'south',
-            270: 'west',
-        }
-        self.current_degrees = starting_degrees
-        self.current_direction = self.degrees_to_direction[starting_degrees]
+    def __init__(self):
         self.manhattan_distance = {
             'north_value': 0,
             'east_value': 0
@@ -51,20 +45,27 @@ class Ferry():
 
     def run_action(self, action, value):
         if action in ['left', 'right']:
-            self.turn(action, value)
+            turns = int(value / 90)
+            for n in range(turns):
+                self.turn(action)
+        elif action == 'forward':
+            self.move_forward(value)
         else:
-            self.move(action, value)
+            self.move_waypoint(action, value)
 
-    def move(self, direction, distance):
-        if direction == 'front':
-            direction = self.current_direction
+    def move_waypoint(self, direction, distance):
         if direction in ['south', 'west']:
             distance *= -1
 
         to_update = 'north_value' if direction in ['north', 'south'] else 'east_value'
-        self.manhattan_distance[to_update] += distance
+        self.waypoint[to_update] += distance
 
-    def turn(self, direction, degrees):
+    def move_forward(self, value):
+        """Move forward to the waypoint a number of times equal to the given value."""
+        self.manhattan_distance['north_value'] += (value * self.waypoint['north_value'])
+        self.manhattan_distance['east_value'] += (value * self.waypoint['east_value'])
+
+    def turn(self, direction):
         """
         Rotate waypoint around the ship the given degrees.
 
@@ -72,19 +73,19 @@ class Ferry():
         R90 rotates the waypoint around the ship clockwise 90 degrees,
         moving it to 4 units east and 10 units south
         """
-        if direction == 'left':  # counter-clockwise
-            degrees *= -1
-        else:  # clockwise
-            pass
-        self.current_degrees += degrees
-        self.current_direction = self.degrees_to_direction[self.current_degrees % 360]
+        value = -1 if direction == 'left' else 1
+
+        north_value = (value * -self.waypoint['east_value'])
+        east_value = (value * self.waypoint['north_value'])
+        self.waypoint['north_value'] = north_value
+        self.waypoint['east_value'] = east_value
 
     def get_manhattan_distance(self):
         return abs(self.manhattan_distance['north_value']) + abs(self.manhattan_distance['east_value'])
 
 
 def main(puzzle_input):
-    ferry = Ferry(90)
+    ferry = Ferry()
     actions = {
         'N': 'north',
         'S': 'south',
@@ -92,13 +93,12 @@ def main(puzzle_input):
         'W': 'west',
         'L': 'left',
         'R': 'right',
-        'F': 'front',
+        'F': 'forward',
     }
     for nav_instruction in puzzle_input:
         action = actions[nav_instruction[0]]
         value = int(nav_instruction[1:])
         ferry.run_action(action, value)
-        # print(action, value, ferry.manhattan_distance, ferry.current_direction)
     return ferry.get_manhattan_distance()
 
 TEST_INPUT = [("""\
@@ -106,7 +106,7 @@ F10
 N3
 F7
 R90
-F11""", 25), ]
+F11""", 286), ]
 
 
 def test(test_input):
