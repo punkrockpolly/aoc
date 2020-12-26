@@ -62,10 +62,10 @@ def main(puzzle_input, turns):
     return cube.count_total_active()
 
 
-TEST_INPUT = [("""\
+TEST_INPUT = """\
 .#.
 ..#
-###""", 848)]
+###"""
 
 PUZZLE_INPUT = """\
 ##..####
@@ -77,22 +77,7 @@ PUZZLE_INPUT = """\
 ..#.#.#.
 .##...#."""
 
-
-def test(test_input):
-    test_results = []
-    for (puzzle_input, expected) in test_input:
-        solution = main(puzzle_input, 6)
-        test_results.append((puzzle_input, solution, expected))
-    for puzzle_input, solution, expected in test_results:
-
-        print(puzzle_input,
-              'solution:', solution,
-              'expected:', expected,
-              ('failed', expected - solution) if solution != expected else '')
-
-
-test(TEST_INPUT)
-
+assert main(TEST_INPUT, 6) == 848
 
 cubes = main(PUZZLE_INPUT, 6)
 print("solution:", cubes)
