@@ -1,6 +1,3 @@
-from math import gcd
-
-
 """
 Find the earliest timestamp such that
 the first bus ID departs at that time and
@@ -8,6 +5,7 @@ each subsequent listed bus ID departs at that subsequent minute.
 
 An x in the schedule means there are no constraints
 """
+from math import gcd
 
 TEST_INPUT = [([7, 13, 'x', 'x', 59, 'x', 31, 19], 1068781),
               ([17, 'x', 13, 19], 3417),
