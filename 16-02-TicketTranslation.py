@@ -37,22 +37,34 @@ def parse_ticket(puzzle_input):
 
 def is_valid(value, ticket_rules):
     for rule in ticket_rules.values():
-        print(rule[0], rule[1], value)
+        # print(rule[0], rule[1], value)
         if value in range(*rule[0]) or value in range(*rule[1]):
             return True
     return False
 
 
+def match_rule(values, rule):
+    return all(value in range(*rule[0]) or value in range(*rule[1]) for value in values)
+
+
 def departure_fields(puzzle_input):
     ticket_rules = parse_rules(next(puzzle_input))
-    ticket = parse_ticket(next(puzzle_input))
+    ticket = list(parse_ticket(next(puzzle_input)))[0]
     nearby_tickets = parse_ticket(next(puzzle_input))
 
     valid_tickets = []
     for t in nearby_tickets:
         if all(is_valid(value, ticket_rules) for value in t):
             valid_tickets.append(t)
-    print(len(valid_tickets))
 
+    matched_rules = {}
+    print(ticket)
+    for rule, ranges in ticket_rules.items():
+        for n in range(len(ticket)):
+
+            values = [tickets[n] for tickets in nearby_tickets]
+            # print(values)
+
+assert departure_fields(parse_file("16-02-test-input.txt")) == 'class,row,seat'
 scanning_error_rate = departure_fields(parse_file("16-01-input.txt"))
 print("solution:", scanning_error_rate)
