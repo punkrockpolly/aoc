@@ -20,7 +20,7 @@ def get_priority(item):
 def find_item(backpack):
     """Return char found in both compartments"""
     compartment_1, compartment_2 = backpack
-    return set(compartment_1).intersection(set(compartment_2)).pop()
+    return (set(compartment_1) & set(compartment_2)).pop()
 
 def unpack(line):
     """
@@ -43,12 +43,11 @@ def main_1(puzzle_input):
 
 def find_badge(group):
     backpack_1, backpack_2, backpack_3 = group
-    return set(backpack_1).intersection(set(backpack_2)).intersection(set(backpack_3)).pop()
+    return (set(backpack_1) & set(backpack_2) & set(backpack_3)).pop()
 
 def build_groups(lines):
     """group every 3"""
-    lines = iter(lines)
-    return iter(lambda: tuple(islice(lines, 3)), ())
+    return zip(*[iter(lines)] * 3)
 
 def main_2(puzzle_input):
     """
@@ -58,19 +57,16 @@ def main_2(puzzle_input):
     groups = build_groups(lines)
     return sum([get_priority(item) for group in groups for item in find_badge(group)]) 
 
-TEST_INPUT_1 = [("""vJrwpWtwJgWrhcsFMMfFFhFp
+TEST_DATA = """vJrwpWtwJgWrhcsFMMfFFhFp
 jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
 PmmdzqPrVvPwwTWBwg
 wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
 ttgJtRGJQctTZtZT
-CrZsJsPPZsGzwwsLwLmpwMDw""", 157)]
+CrZsJsPPZsGzwwsLwLmpwMDw"""
 
-TEST_INPUT_2 = [("""vJrwpWtwJgWrhcsFMMfFFhFp
-jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
-PmmdzqPrVvPwwTWBwg
-wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
-ttgJtRGJQctTZtZT
-CrZsJsPPZsGzwwsLwLmpwMDw""", 70)]
+TEST_INPUT_1 = [(TEST_DATA, 157)]
+
+TEST_INPUT_2 = [(TEST_DATA, 70)]
 
 def test(test_input, f):
     test_results = []
