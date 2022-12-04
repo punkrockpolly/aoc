@@ -40,9 +40,7 @@ def main_1(puzzle_input):
     return overlaps
 
 def compare_ranges_2(r_1, r_2):
-    first = set(r_1) & set(r_2)
-    second = set(r_2) & set(r_1)
-    return first or second
+    return set(r_1) & set(r_2)
 
 def main_2(puzzle_input):
     """how many assignment pairs do the ranges overlap"""
@@ -59,7 +57,6 @@ TEST_DATA = """2-4,6-8
 2-6,4-8"""
 
 TEST_INPUT_1 = [(TEST_DATA, 2)]
-
 TEST_INPUT_2 = [(TEST_DATA, 4)]
 
 def test(test_input, f):
@@ -75,7 +72,9 @@ def test(test_input, f):
               ('failed', expected - solution) if solution != expected else '')
 
 test(TEST_INPUT_1, main_1)
-test(TEST_INPUT_2, main_2)
+solve = main_1(parse_file("inputs/04-Camp-Cleanup.txt"))
+print("solution:", solve)
 
+test(TEST_INPUT_2, main_2)
 solve = main_2(parse_file("inputs/04-Camp-Cleanup.txt"))
 print("solution:", solve)
